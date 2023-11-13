@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<t lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculator</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    .calculator {
+      max-width: 300px;
+      margin: 20px auto;
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-gap: 5px;
+    }
+    .function {
+      grid-column: span 2;
+    }
+  </style>
+</head>
+
+<body onkeypress="handleKeyPress(event)">
+  <div class="container">
+    <div class="calculator">
+      <input type="text" class="form-control display" id="display" disabled>
+      <div class="buttons">
+        <button class="btn btn-danger" onclick="clearDisplay()">C</button>
+        <button class="btn btn-warning" onclick="removeLastDigit()">←</button>
+        <button class="btn btn-secondary" onclick="showHistory()"><img src="https://cdn-icons-png.flaticon.com/128/12749/12749549.png" style="width: 20px;" alt="">
+ </button>
+        <button class="btn btn-info" onclick="appendToDisplay('+')">+</button>
+        <button class="btn btn-light" onclick="appendToDisplay(1)">1</button>
+        <button class="btn btn-light" onclick="appendToDisplay(2)">2</button>
+        <button class="btn btn-light" onclick="appendToDisplay(3)">3</button>
+        <button class="btn btn-info" onclick="appendToDisplay('-')">-</button>
+        <button class="btn btn-light" onclick="appendToDisplay(4)">4</button>
+        <button class="btn btn-light" onclick="appendToDisplay(5)">5</button>
+        <button class="btn btn-light" onclick="appendToDisplay(6)">6</button>
+        <button class="btn btn-info" onclick="appendToDisplay('*')">*</button>
+        <button class="btn btn-light" onclick="appendToDisplay(7)">7</button>
+        <button class="btn btn-light" onclick="appendToDisplay(8)">8</button>
+        <button class="btn btn-light" onclick="appendToDisplay(9)">9</button>
+        <button class="btn btn-info" onclick="appendToDisplay('/')">/</button>
+        <button class="btn btn-light" onclick="appendToDisplay(0)">0</button>
+        <button class="btn btn-primary" onclick="calculate()">=</button>
+        <br>
+        <button class="btn btn-secondary function" onclick="trigFunction('sin')">sin</button>
+        <button class="btn btn-secondary function" onclick="trigFunction('cos')">cos</button>
+        <button class="btn btn-secondary function" onclick="trigFunction('tan')">tan</button>
+        <button class="btn btn-secondary function" onclick="logFunction('log')">log</button>
+        
+      </div>
+    </div>
+  </div>
+  
+  <script>
+  let displayValue = "";
+let history = [];
+
+function appendToDisplay(value) {
+  displayValue += value;
+  document.getElementById("display").value = displayValue;
+}
+
+function clearDisplay() {
+  displayValue = "";
+  document.getElementById("display").value = displayValue;
+}
+
+function calculate() {
+  try {
+    const result = eval(displayValue);
+    document.getElementById("display").value = result;
+    history.push(displayValue + " = " + result);
+    displayValue = "";
+  } catch (error) {
+    document.getElementById("display").value = "Error";
+  }
+}
+
+function trigFunction(type) {
+  if (type === 'sin') {
+    displayValue = Math.sin(eval(displayValue));
+  } else if (type === 'cos') {
+    displayValue = Math.cos(eval(displayValue));
+  } else if (type === 'tan') {
+    displayValue = Math.tan(eval(displayValue));
+  }
+  document.getElementById("display").value = displayValue;
+}
+
+function logFunction(type) {
+  if (type === 'log') {
+    displayValue = Math.log10(eval(displayValue));
+  }
+  document.getElementById("display").value = displayValue;
+}
+
+function removeLastDigit() {
+  displayValue = displayValue.slice(0, -1);
+  document.getElementById("display").value = displayValue;
+}
+
+function showHistory() {
+  alert("Calculation History:\n" + history.join("\n"));
+}
+
+function handleKeyPress(event) {
+  const key = event.key;
+  if (!isNaN(key) || key === '+' || key === '-' || key === '*' || key === '/' || key === '.') {
+    appendToDisplay(key);
+  } else if (key === 'Enter') {
+    calculate();
+  } else if (key === 'c' || key === 'C') {
+    clearDisplay();
+  } else if (key === 's') {
+    trigFunction('sin');
+  } else if (key === 'c') {
+    trigFunction('cos');
+  } else if (key === 't') {
+    trigFunction('tan');
+  } else if (key === 'l') {
+    logFunction('log');
+  } else if (key === 'Backspace') {
+    removeLastDigit();
+  } else if (key === 'h' || key === 'H') {
+    showHistory();
+  }
+}
+  </script>
+</body>
+</html>
